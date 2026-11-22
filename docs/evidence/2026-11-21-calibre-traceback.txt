@@ -1,0 +1,14 @@
+calibre, version 9.6.0
+ERROR: Error: Error communicating with device
+
+Device responded with incorrect information
+
+Traceback (most recent call last):
+  File "calibre\gui2\device.py", line 110, in run
+  File "calibre\gui2\device.py", line 541, in _get_device_information
+  File "calibre\devices\smart_device_app\driver.py", line 58, in _synchronizer
+  File "calibre\devices\smart_device_app\driver.py", line 1233, in get_device_information
+  File "calibre\devices\smart_device_app\driver.py", line 58, in _synchronizer
+  File "calibre\devices\smart_device_app\driver.py", line 648, in _call_client
+  File "calibre\devices\smart_device_app\driver.py", line 690, in _receive_from_client
+calibre.devices.errors.ControlError: Device responded with incorrect information
