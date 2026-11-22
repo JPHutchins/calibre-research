@@ -14,9 +14,17 @@ These are research notes for a planned tool that **pushes an ebook to KOReader b
 ## Findings
 
 1. **calibre's "Device responded with incorrect information" really means KOReader hung up.** calibre read zero bytes while waiting for the reply to `GET_DEVICE_INFORMATION`. → [01-handshake-failure.md](docs/research/01-handshake-failure.md)
-2. **The likely cause is a 1-second handshake window that calibre's GUI can miss.** KOReader gives calibre 1 s between the first two handshake messages. calibre sends the second one only after a round trip through its Qt GUI thread. This is not yet confirmed on the device. → [01 §2–§5](docs/research/01-handshake-failure.md#2-why-koreader-closes-the-connection-there)
+2. **KOReader gives calibre only 1 s between the first two handshake messages.** calibre sends the second one only after its Qt GUI thread has finished `device_detected`, including any plugin hooks. Why it keeps failing here is not yet confirmed. → [01 §2–§5](docs/research/01-handshake-failure.md#2-why-koreader-closes-the-connection-there)
 3. **No existing CLI meets the requirement.** `ebook-device` can't do wireless. OPDS and cloud storage are pull-only. SSH skips calibre metadata. No third-party calibre-protocol server verified with KOReader was found. → [02-transfer-options.md](docs/research/02-transfer-options.md)
-4. **Sending one book takes six server messages.** Discovery, the initialization handshake, device info, `SEND_BOOK`, the raw bytes, then an eject `NOOP`. → [03-wire-protocol.md](docs/research/03-wire-protocol.md)
+4. **Reading the source suggests a minimum session of six steps, not yet tested on the wire.** After UDP discovery, the server sends:
+   1. initialization info
+   2. device information request
+   3. calibre device info
+   4. `SEND_BOOK`
+   5. the raw book bytes
+   6. an eject `NOOP`
+
+   → [03-wire-protocol.md](docs/research/03-wire-protocol.md)
 
 ## Planned shape
 
